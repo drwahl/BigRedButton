@@ -25,16 +25,16 @@ DreamCheeky::BigRedButton.run do
   #on open, prepare temp file for VM tracking
   open do
     $vmcount = 0
-    $VMHASH = Hash.new({})
+    $vmhash = Hash.new({})
   end
 
   #on close, nuke VMs and close the file handle
   close do
-    $VMHASH.each do |key, value|
+    $vmhash.each do |key, value|
       Syslog.open($0, Syslog::LOG_PID | Syslog::LOG_CONS) { |s| s.info "Deleteing VM with UUID of #{value['uuid']}" }
       `nova #{$OS_CREDS} delete #{value['uuid']}`
     end
-    $VMHASH = Hash.new({})
+    $vmhash = Hash.new({})
     $vmcount = 0
   end
 
@@ -46,6 +46,6 @@ DreamCheeky::BigRedButton.run do
     newvmhash = Hash.new({})
     newvmhash['uuid'] = vm_uuid.tr('\n','')
     newvmhash['name'] = "#{$VM_PREFIX}#{$vmcount}"
-    $VMHASH[:"vm#{$vmcount}"] = newvmhash
+    $vmhash[:"vm#{$vmcount}"] = newvmhash
   end
 end
