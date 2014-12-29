@@ -1,9 +1,9 @@
 vmload
 ============
 
-Lid Open: Nothing
-Button Press: Create VM (each press)
-Lid Close: Nuke all VMs created by the above button press(es)
+Lid Open: Nothing  
+Button Press: Create VM (each press)  
+Lid Close: Nuke all VMs created by the above button press(es)  
 
 Most notably about this script is the lack of usage of ruby's openstack module.
 This is due to the fact that it doesn't support network definition and if a
