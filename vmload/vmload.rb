@@ -1,6 +1,13 @@
 require 'rubygems'
 require 'dream_cheeky'
 require 'syslog'
+require 'espeak'
+
+include ESpeak
+
+$SPEAK_VM_DEPLOYED = Speech.new("V M deployed!")
+$SPEAK_VM_DELETED = Speech.new("V Ems deleted!")
+$SPEAK_PREPARED = Speech.new("Prepared to launch V Ems!")
 
 #OpenStack variables
 $OS_USERNAME = 'user'
@@ -26,6 +33,7 @@ DreamCheeky::BigRedButton.run do
   open do
     $vmcount = 0
     $vmhash = Hash.new({})
+    $SPEAK_PREPARED.speak
   end
 
   #on close, nuke VMs and close the file handle
@@ -34,6 +42,7 @@ DreamCheeky::BigRedButton.run do
       Syslog.open($0, Syslog::LOG_PID | Syslog::LOG_CONS) { |s| s.info "Deleteing VM with UUID of #{value['uuid']}" }
       `nova #{$OS_CREDS} delete #{value['uuid']}`
     end
+    $SPEAK_VM_DELETED.speak
     $vmhash = Hash.new({})
     $vmcount = 0
   end
@@ -42,6 +51,7 @@ DreamCheeky::BigRedButton.run do
   push do
     $vmcount += 1
     vm_uuid = `nova #{$OS_CREDS} boot --flavor #{$OS_FLAVOR_ID} --image #{$OS_IMAGE_ID} --key-name #{$OS_SSH_KEY_NAME} --nic net-id=#{$OS_NETWORK_ID} '#{$VM_PREFIX}#{$vmcount}' | grep '| id' | awk '{print $4}'`
+    $SPEAK_VM_DEPLOYED.speak
     Syslog.open($0, Syslog::LOG_PID | Syslog::LOG_CONS) { |s| s.info "Created VM with UUID of #{vm_uuid}" }
     newvmhash = Hash.new({})
     newvmhash['uuid'] = vm_uuid.tr('\n','')
