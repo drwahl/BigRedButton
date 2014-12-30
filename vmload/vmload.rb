@@ -29,14 +29,14 @@ $VM_PREFIX = 'BigRedButtonVM-'
 $vmcount = 0
 
 DreamCheeky::BigRedButton.run do
-  #on open, prepare temp file for VM tracking
+  #on open, prepare to launch VMs
   open do
     $vmcount = 0
     $vmhash = Hash.new({})
     $SPEAK_PREPARED.speak
   end
 
-  #on close, nuke VMs and close the file handle
+  #on close, nuke VMs
   close do
     $vmhash.each do |key, value|
       Syslog.open($0, Syslog::LOG_PID | Syslog::LOG_CONS) { |s| s.info "Deleteing VM with UUID of #{value['uuid']}" }
