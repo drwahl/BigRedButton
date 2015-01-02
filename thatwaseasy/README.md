@@ -2,8 +2,8 @@ vmload
 ============
 
 Lid Open: Nothing  
-Button Press: espeak says "That was easy!"
-Lid Close: Nothing
+Button Press: espeak says "That was easy!"  
+Lid Close: Nothing  
 
 Essentially, this: https://www.youtube.com/watch?v=3YmMNpbFjp0
 
